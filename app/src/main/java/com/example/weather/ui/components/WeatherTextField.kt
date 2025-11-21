@@ -3,6 +3,7 @@ package com.example.weather.ui.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,6 +29,7 @@ fun WeatherTextField(
     placeholder: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     icon: Int? = null,
+    onDone: (String) -> Unit = {},
 ) {
 
     OutlinedTextField(
@@ -50,7 +53,13 @@ fun WeatherTextField(
             )
         },
         keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType
+            keyboardType = keyboardType,
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                onDone(value)
+            }
         ),
         leadingIcon = {
             icon?.let {

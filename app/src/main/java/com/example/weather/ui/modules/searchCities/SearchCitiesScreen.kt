@@ -55,7 +55,10 @@ fun SearchCitiesContent() {
         ) {
             WeatherTextField(
                 value = "",
-                onValueChange = { },
+                onValueChange = {},
+                onDone = { text ->
+                    println("Usuário clicou em DONE com valor: $text")
+                },
                 placeholder = "Search for a city",
                 icon = R.drawable.ic_search
             )
