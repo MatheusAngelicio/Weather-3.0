@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.weather.ui.components.WeatherTopBar
 import com.example.weather.ui.theme.WeatherTheme
 
 @Composable
@@ -36,28 +37,9 @@ fun CityWeatherDetailsScreen(lat: Float, lon: Float, onBack: () -> Unit) {
 fun CityWeatherDetailsContent(onBack: () -> Unit) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "City Details",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBack
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White,
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+            WeatherTopBar(
+                title = "City Details",
+                onBack = onBack,
             )
         }
     ) { innerPadding ->

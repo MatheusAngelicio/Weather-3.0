@@ -32,6 +32,7 @@ import com.example.weather.domain.model.GeocodingLocation
 import com.example.weather.ui.components.ErrorDialog
 import com.example.weather.ui.components.LoadingOverlay
 import com.example.weather.ui.components.WeatherTextField
+import com.example.weather.ui.components.WeatherTopBar
 import com.example.weather.ui.modules.searchCities.model.SearchCitiesFormEvent
 import com.example.weather.ui.modules.searchCities.model.SearchCitiesFormState
 import com.example.weather.ui.state.UiState
@@ -89,26 +90,14 @@ fun SearchCitiesContent(
     cityCoordinatesState: UiState<GeocodingLocation>,
     onFormEvent: (SearchCitiesFormEvent) -> Unit
 ) {
-
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Weather App",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+            WeatherTopBar(
+                title = "Weather App",
             )
         }
     ) { innerPadding ->
-
         Box(modifier = Modifier.fillMaxSize()) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -117,7 +106,6 @@ fun SearchCitiesContent(
                     .consumeWindowInsets(innerPadding)
                     .systemBarsPadding()
             ) {
-
                 WeatherTextField(
                     value = formState.cityQuery,
                     onValueChange = {
