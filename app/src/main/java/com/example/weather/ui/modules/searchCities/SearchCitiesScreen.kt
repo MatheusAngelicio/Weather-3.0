@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.R
+import com.example.weather.domain.model.GeocodingLocation
 import com.example.weather.ui.components.ErrorDialog
 import com.example.weather.ui.components.LoadingOverlay
 import com.example.weather.ui.components.WeatherTextField
@@ -47,8 +48,10 @@ fun SearchCitiesScreen() {
 
     LaunchedEffect(cityCoordinatesState) {
         when (cityCoordinatesState) {
-            UiState.Success -> {
-                println("🟩 SUCESSO: cidade encontrada com sucesso!")
+            is UiState.Success -> {
+                val data = (cityCoordinatesState as UiState.Success).data
+                println("Cidade encontrada: ${data.name}/${data.country}---${data.lat}, ${data.lon}")
+                // Navegar para proxima tela passando latitute e longitude
             }
 
             is UiState.Error -> {
@@ -79,7 +82,7 @@ fun SearchCitiesScreen() {
 @Composable
 fun SearchCitiesContent(
     formState: SearchCitiesFormState,
-    cityCoordinatesState: UiState,
+    cityCoordinatesState: UiState<GeocodingLocation>,
     onFormEvent: (SearchCitiesFormEvent) -> Unit
 ) {
 

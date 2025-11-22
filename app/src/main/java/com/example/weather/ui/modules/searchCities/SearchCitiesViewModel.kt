@@ -2,6 +2,7 @@ package com.example.weather.ui.modules.searchCities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weather.domain.model.GeocodingLocation
 import com.example.weather.domain.usecase.WeatherUseCase
 import com.example.weather.ui.modules.searchCities.model.SearchCitiesFormEvent
 import com.example.weather.ui.modules.searchCities.model.SearchCitiesFormState
@@ -21,7 +22,7 @@ class SearchCitiesViewModel @Inject constructor(
     private val _formState = MutableStateFlow(SearchCitiesFormState())
     val formState = _formState.asStateFlow()
 
-    private val _cityCoordinatesState = MutableStateFlow<UiState>(UiState.Idle)
+    private val _cityCoordinatesState = MutableStateFlow<UiState<GeocodingLocation>>(UiState.Idle)
     val cityCoordinatesState = _cityCoordinatesState.asStateFlow()
 
     fun onFormEvent(event: SearchCitiesFormEvent) {
@@ -52,9 +53,9 @@ class SearchCitiesViewModel @Inject constructor(
                 useCase.getCityCoordinates(
                     cityQuery,
                 ).fold(
-                    onSuccess = {
+                    onSuccess = { data ->
                         _cityCoordinatesState.update {
-                            UiState.Success
+                            UiState.Success(data)
                         }
                     },
                     onFailure = { error ->
