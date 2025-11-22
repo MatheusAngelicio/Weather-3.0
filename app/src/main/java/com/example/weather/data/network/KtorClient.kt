@@ -15,7 +15,7 @@ class KtorClient @Inject constructor(private val client: HttpClient) {
             .body<List<GeocodingLocationResponse>>()
 
         if (result.isEmpty()) {
-            throw IllegalStateException("No city found")
+            throw IllegalStateException("City $city not found")
         }
 
         return result.first()

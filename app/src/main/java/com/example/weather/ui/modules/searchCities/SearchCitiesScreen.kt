@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,7 +16,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.R
+import com.example.weather.ui.components.ErrorDialog
 import com.example.weather.ui.components.LoadingOverlay
 import com.example.weather.ui.components.WeatherTextField
 import com.example.weather.ui.modules.searchCities.model.SearchCitiesFormEvent
@@ -41,6 +42,9 @@ fun SearchCitiesScreen() {
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val cityCoordinatesState by viewModel.cityCoordinatesState.collectAsStateWithLifecycle()
 
+    var showErrorDialog by remember { mutableStateOf<String?>(null) }
+
+
     LaunchedEffect(cityCoordinatesState) {
         when (cityCoordinatesState) {
             UiState.Success -> {
@@ -48,7 +52,8 @@ fun SearchCitiesScreen() {
             }
 
             is UiState.Error -> {
-                println("🟥 ERRO: ${(cityCoordinatesState as UiState.Error).message}")
+                val message = (cityCoordinatesState as UiState.Error).message
+                showErrorDialog = message
             }
 
             else -> Unit
@@ -60,6 +65,13 @@ fun SearchCitiesScreen() {
         cityCoordinatesState = cityCoordinatesState,
         onFormEvent = viewModel::onFormEvent
     )
+
+    showErrorDialog?.let { message ->
+        ErrorDialog(
+            message = message,
+            onDismiss = { showErrorDialog = null }
+        )
+    }
 
 }
 
