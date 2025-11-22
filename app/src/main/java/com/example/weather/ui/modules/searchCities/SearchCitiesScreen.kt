@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.R
@@ -37,14 +38,15 @@ import com.example.weather.ui.state.UiState
 import com.example.weather.ui.theme.WeatherTheme
 
 @Composable
-fun SearchCitiesScreen() {
-    val viewModel = viewModel<SearchCitiesViewModel>()
+fun SearchCitiesScreen(
+    navigateToCityDetails: (lat: Float, lon: Float) -> Unit,
+    viewModel: SearchCitiesViewModel = hiltViewModel()
+) {
 
     val formState by viewModel.formState.collectAsStateWithLifecycle()
     val cityCoordinatesState by viewModel.cityCoordinatesState.collectAsStateWithLifecycle()
 
     var showErrorDialog by remember { mutableStateOf<String?>(null) }
-
 
 //    Se vai desenhar a UI → fora do LaunchedEffect
 //    Se vai fazer algo que NÃO desenha UI → dentro do LaunchedEffect
@@ -52,8 +54,8 @@ fun SearchCitiesScreen() {
         when (cityCoordinatesState) {
             is UiState.Success -> {
                 val data = (cityCoordinatesState as UiState.Success).data
-                println("Cidade encontrada: ${data.name}/${data.country}---${data.lat}, ${data.lon}")
-                // Navegar para proxima tela passando latitute e longitude
+                navigateToCityDetails(data.lat.toFloat(), data.lon.toFloat())
+                viewModel.clearCityCoordinatesState()
             }
 
             is UiState.Error -> {

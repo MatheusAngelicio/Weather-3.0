@@ -11,6 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.weather.navigation.AppNavGraph
+import com.example.weather.navigation.NavRoutes
+import com.example.weather.ui.modules.cityWeatherDetails.CityWeatherDetailsScreen
 import com.example.weather.ui.modules.searchCities.SearchCitiesScreen
 import com.example.weather.ui.theme.WeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,8 +30,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherTheme {
-                SearchCitiesScreen()
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = NavRoutes.SEARCH_CITIES
+                ) {
+                    AppNavGraph(navController).setup(this)
+                }
             }
         }
     }
 }
+

@@ -73,4 +73,8 @@ class SearchCitiesViewModel @Inject constructor(
         }
     }
 
+    fun clearCityCoordinatesState() {
+        _cityCoordinatesState.value = UiState.Idle
+    }
+
 }
