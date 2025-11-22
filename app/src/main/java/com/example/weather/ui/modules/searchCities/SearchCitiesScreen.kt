@@ -46,6 +46,8 @@ fun SearchCitiesScreen() {
     var showErrorDialog by remember { mutableStateOf<String?>(null) }
 
 
+//    Se vai desenhar a UI → fora do LaunchedEffect
+//    Se vai fazer algo que NÃO desenha UI → dentro do LaunchedEffect
     LaunchedEffect(cityCoordinatesState) {
         when (cityCoordinatesState) {
             is UiState.Success -> {
