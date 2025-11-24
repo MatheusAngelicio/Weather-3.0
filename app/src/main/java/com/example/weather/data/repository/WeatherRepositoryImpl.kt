@@ -1,6 +1,8 @@
 package com.example.weather.data.repository
 
+import com.example.weather.data.mapper.toDomain
 import com.example.weather.data.network.KtorClient
+import com.example.weather.domain.model.CurrentWeather
 import com.example.weather.domain.model.GeocodingLocation
 import com.example.weather.domain.repository.WeatherRepository
 import javax.inject.Inject
@@ -14,14 +16,20 @@ class WeatherRepositoryImpl @Inject constructor(
             val response = ktorClient.getCityCoordinates(
                 city = city,
             )
+            response.toDomain()
+        }
+    }
 
-            GeocodingLocation(
-                name = response.name,
-                lat = response.lat,
-                lon = response.lon,
-                country = response.country,
-                state = response.state
+    override suspend fun getWeatherDetails(
+        lat: Float,
+        lon: Float
+    ): Result<CurrentWeather> {
+        return runCatching {
+            val response = ktorClient.getCityCoordinates(
+                lat = lat,
+                lon = lon,
             )
+            response.toDomain()
         }
     }
 }

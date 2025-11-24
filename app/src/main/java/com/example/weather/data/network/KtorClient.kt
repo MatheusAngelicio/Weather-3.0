@@ -1,5 +1,6 @@
 package com.example.weather.data.network
 
+import com.example.weather.data.network.model.CurrentWeatherResponse
 import com.example.weather.data.network.model.GeocodingLocationResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -19,6 +20,15 @@ class KtorClient @Inject constructor(private val client: HttpClient) {
         }
 
         return result.first()
+    }
+
+    suspend fun getCityCoordinates(
+        lat: Float,
+        lon: Float,
+    ): CurrentWeatherResponse {
+        return client
+            .get("data/2.5/weather?lat=${lat}&lon=${lon}")
+            .body<CurrentWeatherResponse>()
     }
 
 }

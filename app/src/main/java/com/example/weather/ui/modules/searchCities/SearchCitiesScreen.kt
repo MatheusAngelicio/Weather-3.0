@@ -83,7 +83,6 @@ fun SearchCitiesScreen(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchCitiesContent(
     formState: SearchCitiesFormState,
