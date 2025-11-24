@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -22,6 +23,7 @@ import com.example.weather.ui.components.WeatherTopBar
 import com.example.weather.ui.modules.cityWeatherDetails.components.MainWeatherInfo
 import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoSuccessContent
 import com.example.weather.ui.state.UiState
+import com.example.weather.ui.theme.BlueSky
 import com.example.weather.ui.theme.WeatherTheme
 
 @Composable
@@ -51,12 +53,16 @@ fun CityWeatherDetailsContent(
     currentWeatherState: UiState<CurrentWeather>,
     onBack: () -> Unit
 ) {
+    val successData = (currentWeatherState as? UiState.Success)?.data
+    val backgroundColor = if (successData?.isDay == true) BlueSky else Color.DarkGray
+
     Scaffold(
+        containerColor = backgroundColor,
         topBar = {
-            val isSuccessState = currentWeatherState as? UiState.Success
             WeatherTopBar(
-                title = isSuccessState?.data?.cityName ?: "City Details",
-                subtitle = isSuccessState?.data?.country,
+                title = successData?.cityName ?: "City Details",
+                subtitle = successData?.country,
+                color = backgroundColor,
                 onBack = onBack,
             )
         }

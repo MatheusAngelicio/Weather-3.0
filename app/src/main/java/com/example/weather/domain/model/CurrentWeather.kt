@@ -14,4 +14,5 @@ data class CurrentWeather(
     val windDeg: Int,
     val lat: Double,
     val lon: Double,
+    val isDay: Boolean,
 )

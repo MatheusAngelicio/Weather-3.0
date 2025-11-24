@@ -18,9 +18,9 @@ fun WeatherInfoSuccessContent(
             MainWeatherInfo(
                 icon = icon,
                 currentTemp = temperature.toInt(),
+                weatherDescription = description,
                 tempMin = tempMin.toInt(),
                 tempMax = tempMax.toInt(),
-                weatherDescription = description
             )
         }
     }

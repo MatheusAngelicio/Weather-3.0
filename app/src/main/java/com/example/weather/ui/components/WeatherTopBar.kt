@@ -28,6 +28,7 @@ fun WeatherTopBar(
     title: String,
     subtitle: String? = null,
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.background,
     onBack: ((() -> Unit))? = null
 ) {
     CenterAlignedTopAppBar(
@@ -66,7 +67,7 @@ fun WeatherTopBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = color
         )
     )
 }

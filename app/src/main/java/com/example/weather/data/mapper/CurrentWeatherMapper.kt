@@ -4,6 +4,9 @@ import com.example.weather.data.network.model.CurrentWeatherResponse
 import com.example.weather.domain.model.CurrentWeather
 
 fun CurrentWeatherResponse.toDomain(): CurrentWeather {
+    val firstWeather = weather.firstOrNull()
+    val icon = firstWeather?.icon.orEmpty()
+
     return CurrentWeather(
         cityName = name,
         country = sys.country,
@@ -12,11 +15,12 @@ fun CurrentWeatherResponse.toDomain(): CurrentWeather {
         tempMin = main.tempMin,
         tempMax = main.tempMax,
         humidity = main.humidity,
-        description = weather.firstOrNull()?.description ?: "",
-        icon = weather.firstOrNull()?.icon ?: "",
+        description = firstWeather?.description.orEmpty(),
+        icon = icon,
         windSpeed = wind.speed,
         windDeg = wind.deg,
         lat = coord.lat,
-        lon = coord.lon
+        lon = coord.lon,
+        isDay = icon.lastOrNull() == 'd'
     )
 }
