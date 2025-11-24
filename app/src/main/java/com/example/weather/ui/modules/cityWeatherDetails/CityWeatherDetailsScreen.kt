@@ -7,19 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.weather.core.utils.WeatherUtils.getUrlIcon
 import com.example.weather.domain.model.CurrentWeather
 import com.example.weather.ui.components.LoadingOverlay
 import com.example.weather.ui.components.WeatherTopBar
+import com.example.weather.ui.modules.cityWeatherDetails.components.MainWeatherInfo
+import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoSuccessContent
 import com.example.weather.ui.state.UiState
 import com.example.weather.ui.theme.WeatherTheme
 
@@ -70,15 +71,11 @@ fun CityWeatherDetailsContent(
                     .systemBarsPadding()
             ) {
                 when (currentWeatherState) {
-                    is UiState.Loading -> {
-                        LoadingOverlay(true)
-                    }
+                    is UiState.Loading -> LoadingOverlay(true)
 
                     is UiState.Success -> {
                         LoadingOverlay(false)
-                        val dataWeather = currentWeatherState.data
-                        Text(text = "Temperature: ${dataWeather.temperature}", color = Color.White)
-                        // Mostrar os componentes quando da sucesso
+                        WeatherInfoSuccessContent(currentWeatherState.data)
                     }
 
                     is UiState.Error -> {
