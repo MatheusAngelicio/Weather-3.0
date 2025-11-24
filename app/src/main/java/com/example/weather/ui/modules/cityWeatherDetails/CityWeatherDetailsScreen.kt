@@ -24,6 +24,7 @@ import com.example.weather.ui.modules.cityWeatherDetails.components.MainWeatherI
 import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoSuccessContent
 import com.example.weather.ui.state.UiState
 import com.example.weather.ui.theme.BlueSky
+import com.example.weather.ui.theme.GraySky
 import com.example.weather.ui.theme.WeatherTheme
 
 @Composable
@@ -54,7 +55,7 @@ fun CityWeatherDetailsContent(
     onBack: () -> Unit
 ) {
     val successData = (currentWeatherState as? UiState.Success)?.data
-    val backgroundColor = if (successData?.isDay == true) BlueSky else Color.DarkGray
+    val backgroundColor = if (successData?.isDay == true) BlueSky else GraySky
 
     Scaffold(
         containerColor = backgroundColor,
