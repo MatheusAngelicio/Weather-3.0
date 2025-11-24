@@ -77,7 +77,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-    implementation(libs.coil.transformations)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.ktor.client.core)

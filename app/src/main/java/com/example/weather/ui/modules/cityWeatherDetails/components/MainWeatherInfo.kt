@@ -13,20 +13,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.weather.core.extensions.toTitleCase
+import com.example.weather.core.utils.WeatherUtils.getUrlIcon
 import com.example.weather.ui.theme.WeatherTheme
 
 @Composable
 fun MainWeatherInfo(
-    urlIcon: String,
+    icon: String,
     currentTemp: Int,
     weatherDescription: String,
     tempMin: Int,
     tempMax: Int,
     modifier: Modifier = Modifier
 ) {
+    val urlIcon = getUrlIcon(icon)
+
     Column(
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth()
     ) {
         AsyncImage(
             model = urlIcon,
@@ -43,13 +47,13 @@ fun MainWeatherInfo(
             fontSize = 100.sp,
             lineHeight = 60.sp,
             color = Color.White
-
         )
+
         Text(
-            weatherDescription,
-            fontWeight = FontWeight.SemiBold,
+            weatherDescription.toTitleCase(),
+            fontWeight = FontWeight.Medium,
             fontSize = 30.sp,
-            lineHeight = 22.sp,
+            lineHeight = 2.sp,
             color = Color.White
         )
         Row {
@@ -75,7 +79,7 @@ fun MainWeatherInfo(
 private fun MainWeatherInfoPreview() {
     WeatherTheme {
         MainWeatherInfo(
-            urlIcon = "https://openweathermap.org/img/wn/10d@4x.png",
+            icon = "10d",
             currentTemp = 25,
             weatherDescription = "Mostly Cloudy",
             tempMin = 18,
