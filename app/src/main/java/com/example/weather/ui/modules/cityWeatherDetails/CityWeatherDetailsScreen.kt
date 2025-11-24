@@ -52,8 +52,10 @@ fun CityWeatherDetailsContent(
 ) {
     Scaffold(
         topBar = {
+            val isSuccessState = currentWeatherState as? UiState.Success
             WeatherTopBar(
-                title = "City Details",
+                title = isSuccessState?.data?.cityName ?: "City Details",
+                subtitle = isSuccessState?.data?.country,
                 onBack = onBack,
             )
         }
