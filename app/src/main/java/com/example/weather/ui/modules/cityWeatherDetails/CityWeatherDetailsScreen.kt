@@ -24,6 +24,7 @@ import com.example.weather.ui.components.WeatherTopBar
 import com.example.weather.ui.modules.cityWeatherDetails.components.MainWeatherInfo
 import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoErrorContent
 import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoSuccessContent
+import com.example.weather.ui.modules.cityWeatherDetails.model.CityWeatherDetailsFormEvent
 import com.example.weather.ui.state.UiState
 import com.example.weather.ui.theme.BlueSky
 import com.example.weather.ui.theme.GraySky
@@ -31,19 +32,18 @@ import com.example.weather.ui.theme.WeatherTheme
 
 @Composable
 fun CityWeatherDetailsScreen(
-    lat: Float,
-    lon: Float,
     onBack: () -> Unit,
     viewModel: CityWeatherDetailsViewModel = hiltViewModel()
 ) {
     val currentWeatherState by viewModel.currentWeatherState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(lat, lon) {
-        viewModel.fetchWeatherDetails(lat, lon)
+    LaunchedEffect(Unit) {
+        viewModel.fetchWeatherDetails()
     }
 
     CityWeatherDetailsContent(
         currentWeatherState = currentWeatherState,
+        onFormEvent = viewModel::onFormEvent,
         onBack = onBack,
     )
 }
@@ -51,6 +51,7 @@ fun CityWeatherDetailsScreen(
 @Composable
 fun CityWeatherDetailsContent(
     currentWeatherState: UiState<CurrentWeather>,
+    onFormEvent: (CityWeatherDetailsFormEvent) -> Unit,
     onBack: () -> Unit
 ) {
     val successData = (currentWeatherState as? UiState.Success)?.data
@@ -93,7 +94,7 @@ fun CityWeatherDetailsContent(
                         WeatherInfoErrorContent(
                             text = currentWeatherState.message,
                             onTryAgainClick = {
-                                // atualiza form state no viewmodel
+                                onFormEvent(CityWeatherDetailsFormEvent.OnRetryFetchWeatherDetails)
                             }
                         )
                     }
@@ -131,7 +132,8 @@ private fun CityWeatherDetailsContentSuccessIsDayPreview() {
                     isDay = true
                 )
             ),
-            onBack = {}
+            onBack = {},
+            onFormEvent = {}
         )
     }
 }
@@ -159,7 +161,8 @@ private fun CityWeatherDetailsContentSuccessIsNightPreview() {
                     isDay = false
                 )
             ),
-            onBack = {}
+            onBack = {},
+            onFormEvent = {}
         )
     }
 }
@@ -170,6 +173,7 @@ private fun CityWeatherDetailsContentErrorPreview() {
     WeatherTheme {
         CityWeatherDetailsContent(
             UiState.Error("error"),
+            {},
             {})
     }
 }

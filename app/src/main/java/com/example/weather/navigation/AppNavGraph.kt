@@ -24,12 +24,8 @@ class AppNavGraph(private val navController: NavHostController) {
                     navArgument("lat") { type = NavType.FloatType },
                     navArgument("lon") { type = NavType.FloatType }
                 )
-            ) { backStackEntry ->
-                val lat = backStackEntry.arguments?.getFloat("lat") ?: 0f
-                val lon = backStackEntry.arguments?.getFloat("lon") ?: 0f
+            ) {
                 CityWeatherDetailsScreen(
-                    lat = lat,
-                    lon = lon,
                     onBack = { navController.popBackStack() }
                 )
             }
