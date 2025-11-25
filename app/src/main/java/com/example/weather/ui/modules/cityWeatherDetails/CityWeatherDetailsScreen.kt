@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +22,7 @@ import com.example.weather.domain.model.CurrentWeather
 import com.example.weather.ui.components.LoadingOverlay
 import com.example.weather.ui.components.WeatherTopBar
 import com.example.weather.ui.modules.cityWeatherDetails.components.MainWeatherInfo
+import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoErrorContent
 import com.example.weather.ui.modules.cityWeatherDetails.components.WeatherInfoSuccessContent
 import com.example.weather.ui.state.UiState
 import com.example.weather.ui.theme.BlueSky
@@ -36,9 +38,6 @@ fun CityWeatherDetailsScreen(
 ) {
     val currentWeatherState by viewModel.currentWeatherState.collectAsStateWithLifecycle()
 
-    // CHAMAR APENAS UMA VEZ
-    //LaunchedEffect é tipo um "executar isso só quando a tela abrir".
-    //É o equivalente ao onCreate()
     LaunchedEffect(lat, lon) {
         viewModel.fetchWeatherDetails(lat, lon)
     }
@@ -55,7 +54,11 @@ fun CityWeatherDetailsContent(
     onBack: () -> Unit
 ) {
     val successData = (currentWeatherState as? UiState.Success)?.data
-    val backgroundColor = if (successData?.isDay == true) BlueSky else GraySky
+    val backgroundColor = when {
+        successData == null -> MaterialTheme.colorScheme.background
+        successData.isDay -> BlueSky
+        else -> GraySky
+    }
 
     Scaffold(
         containerColor = backgroundColor,
@@ -87,8 +90,12 @@ fun CityWeatherDetailsContent(
 
                     is UiState.Error -> {
                         LoadingOverlay(false)
-                        // Mostrar os componentes de erro
-
+                        WeatherInfoErrorContent(
+                            text = currentWeatherState.message,
+                            onTryAgainClick = {
+                                // atualiza form state no viewmodel
+                            }
+                        )
                     }
 
                     is UiState.Idle -> {
@@ -101,10 +108,68 @@ fun CityWeatherDetailsContent(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun CityWeatherDetailsContentSuccessIsDayPreview() {
+    WeatherTheme {
+        CityWeatherDetailsContent(
+            currentWeatherState = UiState.Success(
+                CurrentWeather(
+                    cityName = "São Paulo",
+                    country = "BR",
+                    temperature = 25.3,
+                    feelsLike = 27.0,
+                    tempMin = 22.0,
+                    tempMax = 29.0,
+                    humidity = 60,
+                    description = "Clear sky",
+                    icon = "01d",
+                    windSpeed = 3.4,
+                    windDeg = 180,
+                    lat = -23.5505,
+                    lon = -46.6333,
+                    isDay = true
+                )
+            ),
+            onBack = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CityWeatherDetailsContentSuccessIsNightPreview() {
+    WeatherTheme {
+        CityWeatherDetailsContent(
+            currentWeatherState = UiState.Success(
+                CurrentWeather(
+                    cityName = "São Paulo",
+                    country = "BR",
+                    temperature = 25.3,
+                    feelsLike = 27.0,
+                    tempMin = 22.0,
+                    tempMax = 29.0,
+                    humidity = 60,
+                    description = "Clear sky",
+                    icon = "01d",
+                    windSpeed = 3.4,
+                    windDeg = 180,
+                    lat = -23.5505,
+                    lon = -46.6333,
+                    isDay = false
+                )
+            ),
+            onBack = {}
+        )
+    }
+}
+
 @Preview
 @Composable
-private fun CityWeatherDetailsContentPreview() {
+private fun CityWeatherDetailsContentErrorPreview() {
     WeatherTheme {
-        CityWeatherDetailsContent(UiState.Idle, {})
+        CityWeatherDetailsContent(
+            UiState.Error("error"),
+            {})
     }
 }
